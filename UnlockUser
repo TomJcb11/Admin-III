@@ -1,0 +1,19 @@
+# Importer les utilisateurs d'un fichier CSV
+$users = Import-Csv -Path "CheminVersVotreFichierCsv"
+
+# Choisir l'OU dans laquelle on travaillera
+$organizationalunit = "OU=utilisateurs,DC=allinone,DC=lab"
+
+# Récupérer tous les utilisateurs de l'OU
+$usersAD = Get-ADUser -Filter * -SearchBase $organizationalunit
+
+# Parcourir tous les utilisateurs du fichier CSV
+foreach ($user in $users) {
+    # Récupérer le nom d'utilisateur à débloquer
+    $identity = $user.Utilisateur
+
+    # Débloquer l'utilisateur
+    Unlock-ADAccount -Identity $identity
+}
+
+Write-Host "Fin du script"
